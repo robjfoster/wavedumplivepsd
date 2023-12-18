@@ -46,6 +46,8 @@ def update_plot(frame, parser, args, sc):
     start_time = time.time()
     while time.time() - start_time < 1:
         try:
+            # hacky way to reset the parser's event count
+            parser.n_entries = parser._get_entries()
             event = parser.read_next()
             if event.id % 100 == 0:
                 print(f"Event {event.id}")
@@ -88,6 +90,8 @@ def main():
     ax.set_xlim(0, 10000)
     ax.set_xlabel("Short")
     ax.set_ylabel("log(Long/Short)")
+    ax.set_title(
+        f"Trigger sample: {args.trigger}, Short window: {args.shortWindow}, Long window: {args.longWindow}, Lookback: {args.lookback}, ADC threshold: {args.adcThreshold}")
     animation = FuncAnimation(
         fig, update_plot, fargs=(parser, args, sc), frames=None)
     plt.show()
