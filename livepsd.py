@@ -86,6 +86,8 @@ def main():
     sc = ax.scatter([], [])
     ax.set_ylim(0, 2)
     ax.set_xlim(0, 10000)
+    ax.set_xlabel("Short")
+    ax.set_ylabel("log(Long/Short)")
     animation = FuncAnimation(
         fig, update_plot, fargs=(parser, args, sc), frames=None)
     plt.show()
