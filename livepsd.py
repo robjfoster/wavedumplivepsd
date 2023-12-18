@@ -67,6 +67,7 @@ def update_plot(frame, parser, args, sc):
             ratios.append(long_sum / short_sum)
         except IndexError:
             error_count += 1
+            print("At end of file")
             if error_count > 10:
                 print("No new events for 10 seconds, exiting.")
                 sys.exit()
