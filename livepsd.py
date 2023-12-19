@@ -34,6 +34,8 @@ def parse_args():
         '--lookback', help="Number of samples before the trigger to start the windows", default=5, type=int)
     parser.add_argument(
         "--adcThreshold", help="Integrate only above this threshold", default=15, type=int)
+    parser.add_argument(
+        "--eventThreshold", help="Skip event where the short window does not contaim sample above this threshold", default=100, type=int)
     return parser.parse_args()
 
 
@@ -52,13 +54,13 @@ def update_plot(frame, parser, args, sc):
             if event.id % 100 == 0:
                 print(f"Event {event.id}")
             event.record = event.record * -1
-            event.record = event.record - np.median(event.record[:300])
+            event.record = event.record - np.median(event.record[:100])
             event.record[event.record < args.adcThreshold] = 0
             short_array = event.record[(
                 args.trigger - args.lookback):(args.trigger + args.shortWindow)]
             long_array = event.record[(
                 args.trigger - args.lookback):(args.trigger + args.longWindow)]
-            if np.max(short_array) < 150:
+            if np.max(short_array) < args.eventThreshold:
                 continue
             short_sum = np.sum(short_array)
             long_sum = np.sum(long_array)
